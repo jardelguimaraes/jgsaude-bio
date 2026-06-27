@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JG Saúde CRM | @jgclinicas</title>
+  <meta name="description" content="Automação inteligente para clínicas · JGAutomações.AI · Itaúna/MG" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #041820;
+      --primary:  #00B4C6;
+      --accent:   #C9A227;
+      --green:    #1D9E75;
+      --purple:   #7F77DD;
+      --text:     #F0F8FF;
+      --card-bg:  rgba(255,255,255,0.05);
+      --card-border: rgba(0,180,198,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 56px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 45% at 50% 0%, rgba(0,180,198,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 85% 90%, rgba(201,162,39,0.10) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 10% 60%, rgba(29,158,117,0.08) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+
+    /* ── AVATAR ── */
+    .avatar-wrap {
+      width: 114px;
+      height: 114px;
+      border-radius: 50%;
+      padding: 3px;
+      background: conic-gradient(var(--primary), var(--accent), var(--primary));
+      animation: spinRing 5s linear infinite, fadeDown 0.6s ease both;
+      flex-shrink: 0;
+    }
+
+    @keyframes spinRing {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #062530;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -2px;
+      border: 3px solid var(--bg);
+    }
+
+    /* ── PERFIL ── */
+    .profile-info {
+      text-align: center;
+      animation: fadeDown 0.6s ease 0.1s both;
+    }
+
+    .name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--text), var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .handle {
+      font-size: 0.88rem;
+      color: var(--primary);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      color: var(--text);
+      opacity: 0.72;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 4px 16px;
+      background: rgba(0,180,198,0.10);
+      border: 1px solid rgba(0,180,198,0.28);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(1.5); }
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      text-decoration: none;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-left: 4px solid var(--card-accent);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.45s ease, transform 0.45s ease, background 0.2s ease;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card:hover, .card:focus-visible {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-3px);
+    }
+
+    .card:active { transform: scale(0.98); }
+
+    .card-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      width: 38px;
+      text-align: center;
+    }
+
+    .card-text { flex: 1; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-sub {
+      font-size: 0.75rem;
+      color: var(--primary);
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    .card-arrow {
+      color: var(--primary);
+      opacity: 0.5;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── SOBRE ── */
+    .about {
+      width: 100%;
+      padding: 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-align: center;
+      animation: fadeUp 0.6s ease 0.65s both;
+    }
+
+    .about-title {
+      font-size: 0.73rem;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .about-text {
+      font-size: 0.87rem;
+      line-height: 1.7;
+      color: var(--text);
+      opacity: 0.78;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,180,198,0.45) 30%, rgba(201,162,39,0.45) 70%, transparent);
+      animation: fadeUp 0.6s ease 0.75s both;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      animation: fadeUp 0.6s ease 0.85s both;
+    }
+
+    .footer-credit {
+      font-size: 0.73rem;
+      color: var(--text);
+      opacity: 0.35;
+      margin-bottom: 12px;
+    }
+
+    .btn-bio {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      background: transparent;
+      border: 1px solid rgba(0,180,198,0.3);
+      border-radius: 10px;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .btn-bio:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Avatar -->
+    <div class="avatar-wrap">
+      <div class="avatar-inner">JG+</div>
+    </div>
+
+    <!-- Perfil -->
+    <div class="profile-info">
+      <h1 class="name">JG Saúde CRM</h1>
+      <p class="handle">@jgsaude.ai</p>
+      <p class="tagline">Automação inteligente para clínicas</p>
+      <span class="badge">Itaúna/MG &middot; JGAutomações.AI</span>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards" role="list">
+
+      <a
+        class="card"
+        href="https://wa.me/5537988295008?text=Quero+reduzir+faltas"
+        target="_blank"
+        rel="noopener noreferrer"
+        role="listitem"
+        style="--card-accent: #00B4C6;"
+      >
+        <span class="card-icon" aria-hidden="true">📅</span>
+        <div class="card-text">
+          <div class="card-title">Reduzir faltas na clínica</div>
+          <div class="card-sub">Confirmação automática por WhatsApp</div>
+        </div>
+        <span class="card-arrow" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://wa.me/5537988295008?text=Quero+agente+IA"
+        target="_blank"
+        rel="noopener noreferrer"
+        role="listitem"
+        style="--card-accent: #C9A227;"
+      >
+        <span class="card-icon" aria-hidden="true">🤖</span>
+        <div class="card-text">
+          <div class="card-title">Agente IA para pacientes</div>
+          <div class="card-sub">Atendimento 24h automatizado</div>
+        </div>
+        <span class="card-arrow" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://wa.me/5537988295008?text=Quero+CRM+clinica"
+        target="_blank"
+        rel="noopener noreferrer"
+        role="listitem"
+        style="--card-accent: #1D9E75;"
+      >
+        <span class="card-icon" aria-hidden="true">📊</span>
+        <div class="card-text">
+          <div class="card-title">CRM para clínicas</div>
+          <div class="card-sub">Gerencie pacientes e receita</div>
+        </div>
+        <span class="card-arrow" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://jardelguimaraes.com.br"
+        target="_blank"
+        rel="noopener noreferrer"
+        role="listitem"
+        style="--card-accent: #7F77DD;"
+      >
+        <span class="card-icon" aria-hidden="true">📱</span>
+        <div class="card-text">
+          <div class="card-title">Ver demonstração</div>
+          <div class="card-sub">Veja o sistema funcionando</div>
+        </div>
+        <span class="card-arrow" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://wa.me/5537988295008"
+        target="_blank"
+        rel="noopener noreferrer"
+        role="listitem"
+        style="--card-accent: #25D366;"
+      >
+        <span class="card-icon" aria-hidden="true">💬</span>
+        <div class="card-text">
+          <div class="card-title">Falar com especialista</div>
+          <div class="card-sub">WhatsApp direto com Jardel</div>
+        </div>
+        <span class="card-arrow" aria-hidden="true">›</span>
+      </a>
+
+    </div>
+
+    <!-- Sobre -->
+    <div class="about">
+      <p class="about-title">Sobre</p>
+      <p class="about-text">
+        Automatizamos clínicas com IA — menos faltas,<br>
+        mais pacientes, mais receita.<br>
+        Sistema completo: CRM + WhatsApp + Agendamento.
+      </p>
+    </div>
+
+    <!-- Divisor -->
+    <div class="divider" role="separator" aria-hidden="true"></div>
+
+    <!-- Footer -->
+    <footer>
+      <p class="footer-credit">© 2026 JGAutomações.AI</p>
+      <a
+        class="btn-bio"
+        href="https://wa.me/5537998768411?text=Quero%20minha%20Link%20Page" target="_blank"
+        rel="noopener noreferrer"
+      >
+        🔗 Quero minha Link Page
+      </a>
+    </footer>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.style.transitionDelay = `${0.25 + i * 0.1}s`;
+      new IntersectionObserver(([entry], obs) => {
+        if (entry.isIntersecting) { card.classList.add('visible'); obs.disconnect(); }
+      }, { threshold: 0.1 }).observe(card);
+    });
+  </script>
+</body>
+</html>
